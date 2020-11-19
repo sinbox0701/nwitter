@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import AppRouter from "components/Router";
 import {authService} from "fbase";
+import Footer from "./Footer";
 
 function App() {
   const [init, setInit] = useState(false);
@@ -14,6 +15,8 @@ function App() {
           uid: user.uid,
           updateProfile: (args) => user.updateProfile(args)
         });//user object의 일부만 적용해야 React가 헷갈리지 않음
+      }else{
+        setUserObj(null);
       }
       setInit(true);
     });
@@ -36,7 +39,7 @@ function App() {
                 isLoggedIn={Boolean(userObj)} 
                 userObj={userObj}
               /> : "Initializing..."}
-      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
+      <Footer/>
     </>
   );
 }
