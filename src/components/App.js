@@ -9,16 +9,33 @@ function App() {
   useEffect(() => {
     authService.onAuthStateChanged((user) => { // user가 있는지 확인하는 함수
       if(user){
-        setUserObj(user);
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => user.updateProfile(args)
+        });//user object의 일부만 적용해야 React가 헷갈리지 않음
       }
       setInit(true);
     });
   },[]);
   //새로고침할 때 마다 작동
+  
+  const refreshUser = () => {
+    const user = authService.currentUser;
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => user.updateProfile(args)
+    });
+  };
 
   return (
     <>
-      {init ? <AppRouter isLoggedIn={Boolean(userObj)} userObj={userObj}/> : "Initializing..."}
+      {init ? <AppRouter
+                refreshUser={refreshUser} 
+                isLoggedIn={Boolean(userObj)} 
+                userObj={userObj}
+              /> : "Initializing..."}
       <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   );
